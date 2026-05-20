@@ -1,0 +1,26 @@
+{
+  "name": "claude-dashboard",
+  "version": "1.0.0",
+  "description": "A comprehensive dashboard to visualize Claude Code usage statistics",
+  "scripts": {
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "start": "./start.sh",
+    "stop": "./stop.sh",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": [
+    "claude",
+    "dashboard",
+    "analytics",
+    "statistics",
+    "docker"
+  ],
+  "author": "",
+  "license": "MIT"
+}

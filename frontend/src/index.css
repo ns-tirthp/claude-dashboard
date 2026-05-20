@@ -1,0 +1,735 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Neo-Brutalist Developer Dashboard
+   Tokens live in src/theme/antd-theme.js. This file is for the
+   global look-and-feel + Ant Design overrides that aren't
+   reachable through theme tokens.
+   ============================================================ */
+
+:root {
+  --bd-bg: #EEEEE8;
+  --bd-surface: #FFFFFF;
+  --bd-ink: #1A1A1A;
+  --bd-ink-soft: #555555;
+  --bd-muted: #777777;
+  --bd-muted-soft: #999999;
+  --bd-rule: #E0E0E0;
+  --bd-hover: #F5F5F0;
+  --bd-row-hover: #F7F7F2;
+  --bd-badge-bg: #F0F0EA;
+  --bd-warning-bg: #FFFBEB;
+  --bd-warning-edge: #F5A623;
+  --bd-success-ink: #276749;
+  --bd-error-ink: #C53030;
+  --bd-blue-accent: #1677FF;
+  --bd-mono: 'Space Mono', 'Courier New', monospace;
+}
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--bd-mono);
+  background-color: var(--bd-bg);
+  color: var(--bd-ink);
+}
+
+code {
+  font-family: var(--bd-mono);
+}
+
+/* ---------------- Header card ---------------- */
+.dashboard-header {
+  background: var(--bd-surface);
+  border-radius: 0;
+  border: 2px solid var(--bd-ink);
+  box-shadow: 6px 6px 0px var(--bd-ink);
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+/* ---------------- Filter bar ---------------- */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: var(--bd-surface);
+  border: 1px solid var(--bd-ink);
+  box-shadow: 3px 3px 0px var(--bd-ink);
+  padding: 14px 20px;
+  margin-bottom: 24px;
+}
+
+.filter-bar-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--bd-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bd-ink);
+  padding-right: 12px;
+  border-right: 1px solid var(--bd-rule);
+}
+
+.filter-bar-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-bar-control-label {
+  font-family: var(--bd-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bd-ink-soft);
+}
+
+.filter-bar-loading {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-header h1 {
+  font-family: var(--bd-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bd-ink);
+}
+
+.dashboard-header p {
+  font-family: var(--bd-mono);
+  font-weight: 400;
+  color: var(--bd-ink-soft);
+}
+
+/* ---------------- Card / Stat card ---------------- */
+.ant-card {
+  box-shadow: 4px 4px 0px var(--bd-ink);
+  border-radius: 0;
+  border: 2px solid var(--bd-ink);
+  background: var(--bd-surface);
+  transition: none;
+}
+
+.ant-card:hover {
+  box-shadow: 4px 4px 0px var(--bd-ink);
+  transform: none;
+}
+
+.ant-card-head {
+  border-bottom: 2px solid var(--bd-ink);
+  background: var(--bd-surface);
+  min-height: 44px;
+}
+
+.ant-card-head-title {
+  font-family: var(--bd-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--bd-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Statistic */
+.ant-statistic {
+  padding: 4px 0;
+}
+
+.ant-statistic-title {
+  font-family: var(--bd-mono);
+  color: var(--bd-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-family: var(--bd-mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--bd-ink);
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ant-statistic-content-prefix {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-end: 0;
+  color: var(--bd-ink);
+  font-size: 18px;
+}
+
+.ant-statistic-content-prefix .anticon {
+  font-size: 18px;
+  color: var(--bd-ink);
+}
+
+.ant-statistic-content-suffix {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bd-muted);
+  margin-inline-start: 4px;
+}
+
+/* Drop the stale gradient classes onto a single neutral surface */
+.stat-card-gradient-blue,
+.stat-card-gradient-purple,
+.stat-card-gradient-pink,
+.stat-card-gradient-amber {
+  background: var(--bd-surface);
+}
+
+/* ---------------- Progress bar ---------------- */
+.ant-progress-line .ant-progress-inner {
+  border-radius: 0 !important;
+  background: var(--bd-rule) !important;
+  border: none;
+}
+
+.ant-progress-bg {
+  border-radius: 0 !important;
+  background: var(--bd-ink) !important;
+  height: 3px !important;
+}
+
+.ant-progress-success-bg {
+  border-radius: 0 !important;
+  background: var(--bd-ink) !important;
+}
+
+/* ---------------- Table ---------------- */
+.ant-table {
+  border-radius: 0;
+  border: 1px solid var(--bd-ink);
+  overflow: hidden;
+}
+
+.ant-table-container,
+.ant-table-container table {
+  border-radius: 0 !important;
+}
+
+.ant-table-thead > tr > th {
+  font-family: var(--bd-mono);
+  background: var(--bd-hover);
+  font-weight: 700;
+  color: var(--bd-ink);
+  border-bottom: 1px solid var(--bd-ink) !important;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ant-table-thead > tr > th::before {
+  display: none;
+}
+
+.ant-table-tbody > tr {
+  transition: none;
+  border-bottom: 1px solid var(--bd-rule);
+}
+
+.ant-table-tbody > tr > td {
+  font-family: var(--bd-mono);
+  font-size: 12px;
+  padding: 10px 12px;
+  color: var(--bd-ink);
+  border-bottom: 1px solid var(--bd-rule) !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: var(--bd-row-hover) !important;
+}
+
+.ant-table-tbody > tr:last-child > td {
+  border-bottom: none !important;
+}
+
+/* ---------------- Buttons ---------------- */
+.ant-btn {
+  font-family: var(--bd-mono);
+  border-radius: 0 !important;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 80ms ease, box-shadow 80ms ease, background 80ms ease;
+}
+
+.ant-btn-default {
+  background: var(--bd-surface);
+  border: 1px solid var(--bd-ink);
+  color: var(--bd-ink);
+  box-shadow: none;
+}
+
+.ant-btn-default:hover,
+.ant-btn-default:focus {
+  background: var(--bd-hover) !important;
+  border-color: var(--bd-ink) !important;
+  color: var(--bd-ink) !important;
+  box-shadow: none !important;
+}
+
+.ant-btn-primary {
+  background: var(--bd-ink);
+  border: 2px solid var(--bd-ink);
+  color: var(--bd-surface);
+  font-weight: 700;
+  box-shadow: 3px 3px 0px var(--bd-ink-soft);
+  padding: 6px 16px;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #333333 !important;
+  border-color: var(--bd-ink) !important;
+  color: var(--bd-surface) !important;
+  box-shadow: none !important;
+  transform: translate(2px, 2px);
+}
+
+.ant-btn-sm {
+  font-size: 11px;
+  padding: 2px 10px;
+  height: 24px;
+}
+
+/* ---------------- Tabs ---------------- */
+.ant-tabs {
+  font-family: var(--bd-mono);
+}
+
+.ant-tabs-tab {
+  font-family: var(--bd-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ant-tabs-ink-bar {
+  background: var(--bd-blue-accent);
+  height: 2px;
+}
+
+/* ---------------- Tag (default — used as inline badge) ---------------- */
+.ant-tag {
+  font-family: var(--bd-mono);
+  border-radius: 0;
+  border: 1px solid var(--bd-ink);
+  background: var(--bd-badge-bg);
+  color: var(--bd-ink);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 1px 8px;
+  line-height: 1.6;
+}
+
+.ant-tag-green {
+  background: transparent;
+  border: 1px solid var(--bd-success-ink);
+  color: var(--bd-success-ink);
+}
+
+.ant-tag-red {
+  background: transparent;
+  border: 1px solid var(--bd-error-ink);
+  color: var(--bd-error-ink);
+}
+
+/* ---------------- Alert / Banner ---------------- */
+.ant-alert {
+  font-family: var(--bd-mono);
+  border-radius: 0;
+  border: 1px solid var(--bd-warning-edge);
+  background: var(--bd-warning-bg);
+  box-shadow: none;
+  padding: 10px 14px;
+}
+
+.ant-alert-warning {
+  background: var(--bd-warning-bg);
+  border: 1px solid var(--bd-warning-edge);
+  border-left: 3px solid var(--bd-warning-edge);
+}
+
+.ant-alert-info {
+  background: var(--bd-surface);
+  border: 1px solid var(--bd-ink);
+  border-left: 3px solid var(--bd-ink);
+}
+
+.ant-alert-success {
+  background: var(--bd-surface);
+  border: 1px solid var(--bd-success-ink);
+  border-left: 3px solid var(--bd-success-ink);
+}
+
+.ant-alert-error {
+  background: var(--bd-surface);
+  border: 1px solid var(--bd-error-ink);
+  border-left: 3px solid var(--bd-error-ink);
+}
+
+.ant-alert-message {
+  font-family: var(--bd-mono);
+  color: var(--bd-ink);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.ant-alert-description {
+  font-family: var(--bd-mono);
+  color: var(--bd-ink-soft);
+  font-size: 12px;
+}
+
+.ant-alert-icon {
+  color: var(--bd-warning-edge);
+}
+
+/* ---------------- Select / Dropdown ---------------- */
+.ant-select-selector {
+  border-radius: 0 !important;
+  border: 1px solid var(--bd-ink) !important;
+  box-shadow: none !important;
+  font-family: var(--bd-mono);
+  font-size: 12px;
+}
+
+.ant-select-dropdown {
+  border-radius: 0;
+  border: 1px solid var(--bd-ink);
+  box-shadow: 3px 3px 0px var(--bd-ink);
+  font-family: var(--bd-mono);
+}
+
+.ant-select-item {
+  font-family: var(--bd-mono);
+  font-size: 12px;
+}
+
+/* ---------------- Pagination ---------------- */
+.ant-pagination {
+  margin-top: 16px;
+}
+
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next {
+  font-family: var(--bd-mono);
+  border-radius: 0 !important;
+  border: 1px solid var(--bd-ink) !important;
+  transition: none;
+}
+
+.ant-pagination-item a {
+  font-family: var(--bd-mono);
+  color: var(--bd-ink);
+  font-size: 12px;
+}
+
+.ant-pagination-item-active {
+  background: var(--bd-ink) !important;
+  border: 1px solid var(--bd-ink) !important;
+  box-shadow: none !important;
+}
+
+.ant-pagination-item-active a {
+  color: var(--bd-surface) !important;
+  font-weight: 700;
+}
+
+.ant-pagination-options .ant-select-selector {
+  border-radius: 0 !important;
+}
+
+/* ---------------- Empty state ---------------- */
+.ant-empty-description {
+  font-family: var(--bd-mono);
+  color: var(--bd-muted-soft);
+  font-size: 12px;
+}
+
+.ant-empty-img-default,
+.ant-empty-img-simple {
+  filter: grayscale(1) opacity(0.7);
+}
+
+/* ---------------- Spin ---------------- */
+.ant-spin {
+  color: var(--bd-ink);
+}
+
+.ant-spin-dot-item {
+  background-color: var(--bd-ink);
+}
+
+/* ---------------- Recharts ---------------- */
+.recharts-text,
+.recharts-cartesian-axis-tick-value {
+  font-family: var(--bd-mono) !important;
+  font-size: 11px !important;
+  fill: var(--bd-chart-axis, #888888) !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+
+.recharts-default-legend {
+  font-family: var(--bd-mono) !important;
+  font-size: 11px !important;
+}
+
+.recharts-legend-item-text {
+  color: var(--bd-ink) !important;
+  font-family: var(--bd-mono) !important;
+  font-size: 11px !important;
+}
+
+.recharts-pie-label-text {
+  font-family: var(--bd-mono) !important;
+  font-size: 11px !important;
+  fill: var(--bd-ink) !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+
+/* ---------------- Footer ---------------- */
+.dashboard-footer {
+  font-family: var(--bd-mono);
+  font-size: 11px;
+  color: var(--bd-muted-soft);
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 32px;
+}
+
+/* ---------------- Inline status badges (custom classes) ---------------- */
+.brutal-pill {
+  display: inline-block;
+  background: var(--bd-badge-bg);
+  border: 1px solid var(--bd-ink);
+  border-radius: 0;
+  font-family: var(--bd-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  color: var(--bd-ink);
+  letter-spacing: 0.04em;
+}
+
+.brutal-status {
+  display: inline-block;
+  border-radius: 0;
+  font-family: var(--bd-mono);
+  font-size: 10px;
+  padding: 1px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: transparent;
+}
+
+.brutal-status-accept {
+  border: 1px solid var(--bd-success-ink);
+  color: var(--bd-success-ink);
+}
+
+.brutal-status-fail {
+  border: 1px solid var(--bd-error-ink);
+  color: var(--bd-error-ink);
+}
+
+/* ---------------- Chat Markdown ---------------- */
+.chat-markdown {
+  font-size: 13px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.chat-markdown p {
+  margin: 0 0 8px 0;
+}
+
+.chat-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-markdown h1,
+.chat-markdown h2,
+.chat-markdown h3,
+.chat-markdown h4,
+.chat-markdown h5,
+.chat-markdown h6 {
+  margin: 12px 0 6px 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.chat-markdown h1 { font-size: 1.3em; }
+.chat-markdown h2 { font-size: 1.15em; }
+.chat-markdown h3 { font-size: 1.05em; }
+
+.chat-markdown ul,
+.chat-markdown ol {
+  margin: 4px 0 8px 0;
+  padding-left: 20px;
+}
+
+.chat-markdown li {
+  margin-bottom: 2px;
+}
+
+.chat-markdown li > ul,
+.chat-markdown li > ol {
+  margin: 2px 0;
+}
+
+.chat-markdown code {
+  font-family: var(--bd-mono);
+  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.chat-markdown-user code {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.chat-markdown pre {
+  background: #1A1A1A;
+  color: #E0E0E0;
+  padding: 12px 14px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.chat-markdown pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.chat-markdown-user pre {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFF;
+}
+
+.chat-markdown blockquote {
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-left: 3px solid var(--bd-rule);
+  color: var(--bd-muted);
+}
+
+.chat-markdown-user blockquote {
+  border-left-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-markdown table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+  width: 100%;
+}
+
+.chat-markdown th,
+.chat-markdown td {
+  border: 1px solid var(--bd-rule);
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.chat-markdown th {
+  background: var(--bd-hover);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chat-markdown-user th,
+.chat-markdown-user td {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-markdown-user th {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chat-markdown hr {
+  border: none;
+  border-top: 1px solid var(--bd-rule);
+  margin: 12px 0;
+}
+
+.chat-markdown-user hr {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-markdown a {
+  color: var(--bd-blue-accent);
+  text-decoration: underline;
+}
+
+.chat-markdown-user a {
+  color: #7CB3FF;
+}
+
+.chat-markdown img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.chat-markdown input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.chat-markdown del {
+  opacity: 0.6;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .ant-statistic-content {
+    font-size: 22px;
+  }
+
+  .dashboard-header {
+    padding: 24px;
+    box-shadow: 4px 4px 0px var(--bd-ink);
+  }
+
+  .ant-card {
+    box-shadow: 3px 3px 0px var(--bd-ink);
+  }
+}

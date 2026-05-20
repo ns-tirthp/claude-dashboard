@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: claude-dashboard-backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ~/.claude/projects:/root/.claude/projects:ro
+      - claude-dashboard-data:/app/data
+    environment:
+      - TELEMETRY_DB_PATH=/app/data/telemetry.db
+      - PORT=3001
+      - AI_PROVIDER=local
+      - LOCAL_AI_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: claude-dashboard-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  claude-dashboard-data:
