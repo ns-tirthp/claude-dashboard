@@ -39,30 +39,30 @@ export class JSONLWatcher {
 
     logger.info('watcher', `Starting JSONL watcher on ${this.projectsPath}`);
 
-    const watchPaths = this.resolveWatchPaths();
-    logger.info('watcher', `Resolved ${watchPaths.length} JSONL files to watch`);
-
-    if (watchPaths.length === 0) {
-      logger.warn('watcher', 'No JSONL files found — watching projects directory for new entries');
-      watchPaths.push(this.projectsPath);
-    }
+    // Watch the projects directory itself so new JSONL files are automatically
+    // detected without requiring a restart.
+    const watchPath = this.projectsPath;
+    logger.info('watcher', `Watching directory: ${watchPath}`);
 
     // Enable polling for Docker environments where inotify doesn't work across volume mounts
     const isDocker = fs.existsSync('/.dockerenv');
 
-    this.watcher = chokidar.watch(watchPaths, {
+    this.watcher = chokidar.watch(watchPath, {
       persistent: true,
       ignoreInitial: false,
+      // Short stability window so live sessions ingest while still in progress.
+      // The periodic flush below is the safety net for chatty sessions whose
+      // writes never quiet down for the full window.
       awaitWriteFinish: {
-        stabilityThreshold: this.debounceTime,
-        pollInterval: 100
+        stabilityThreshold: 500,
+        pollInterval: isDocker ? 250 : 100
       },
-      depth: 2,
+      depth: 3,
       alwaysStat: true,
-      // Enable polling in Docker (macOS volume mounts don't emit inotify events)
+      // Enable polling in Docker (macOS bind mounts don't emit inotify events)
       usePolling: isDocker,
-      interval: 5000, // Poll every 5 seconds
-      binaryInterval: 10000 // Poll binary files less frequently
+      interval: isDocker ? 1000 : 5000,
+      binaryInterval: isDocker ? 2000 : 10000
     });
 
     this.watcher
@@ -83,36 +83,27 @@ export class JSONLWatcher {
       .on('ready', () => {
         logger.info('watcher', 'JSONL watcher ready - initial scan complete');
         this.isRunning = true;
+        this.startPeriodicFlush();
       });
   }
 
   /**
-   * Resolve concrete file/directory paths to watch (avoids glob issues on Docker volumes)
+   * Periodically rescan all JSONLs and re-ingest any whose fingerprint changed.
+   * Catches active sessions whose writes never quiet down long enough for
+   * chokidar's awaitWriteFinish to emit a change event.
    */
-  resolveWatchPaths() {
-    const paths = [];
-    try {
-      const entries = fs.readdirSync(this.projectsPath);
-      for (const entry of entries) {
-        if (!entry.startsWith('-')) continue;
-        const dirPath = path.join(this.projectsPath, entry);
-        try {
-          const stat = fs.statSync(dirPath);
-          if (!stat.isDirectory()) continue;
-        } catch { continue; }
-
-        const files = fs.readdirSync(dirPath);
-        for (const file of files) {
-          if (file.endsWith('.jsonl')) {
-            paths.push(path.join(dirPath, file));
-          }
-        }
+  startPeriodicFlush() {
+    if (this.flushTimer) return;
+    const intervalMs = 10000;
+    this.flushTimer = setInterval(() => {
+      const files = this.findAllJSONLFiles();
+      for (const filePath of files) {
+        this.scheduleIngestion(filePath);
       }
-    } catch (err) {
-      logger.error('watcher', 'Error resolving watch paths', { error: err.message });
-    }
-    return paths;
+    }, intervalMs);
+    if (this.flushTimer.unref) this.flushTimer.unref();
   }
+
 
   /**
    * Stop the watcher
@@ -123,6 +114,11 @@ export class JSONLWatcher {
     }
 
     logger.info('watcher', 'Stopping JSONL watcher...');
+
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = null;
+    }
 
     // Drop any pending re-run requests; in-flight ingestion will finish naturally.
     this.pendingFiles.clear();
@@ -252,6 +248,42 @@ export class JSONLWatcher {
       isRunning: this.isRunning,
       pendingFiles: this.pendingFiles.size
     };
+  }
+
+  /**
+   * Manually rescan all JSONL files (for use by the refresh API endpoint)
+   */
+  async rescanAll() {
+    logger.info('watcher', 'Manual rescan triggered');
+    const files = this.findAllJSONLFiles();
+    logger.info('watcher', `Found ${files.length} JSONL files to rescan`);
+    for (const filePath of files) {
+      await this.ingestFile(filePath);
+    }
+  }
+
+  findAllJSONLFiles() {
+    const files = [];
+    try {
+      const entries = fs.readdirSync(this.projectsPath);
+      for (const entry of entries) {
+        const dirPath = path.join(this.projectsPath, entry);
+        try {
+          const stat = fs.statSync(dirPath);
+          if (!stat.isDirectory()) continue;
+        } catch { continue; }
+
+        const children = fs.readdirSync(dirPath);
+        for (const child of children) {
+          if (child.endsWith('.jsonl')) {
+            files.push(path.join(dirPath, child));
+          }
+        }
+      }
+    } catch (err) {
+      logger.error('watcher', 'Error scanning for JSONL files', { error: err.message });
+    }
+    return files;
   }
 
   /**

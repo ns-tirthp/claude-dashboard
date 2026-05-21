@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { listHistorySessions, getHistorySession } from './history.service.js';
 import { NotFoundError } from '../../lib/errors.js';
+import { getWatcher } from '../../ingestor/watcher.js';
 import logger from '../../lib/logger.js';
 
 const router = Router();
@@ -24,6 +25,20 @@ router.get('/history/sessions/:projectDir/:sessionId', (req, res) => {
     }
     logger.error('history', 'Failed to fetch conversation', { error: error.message });
     res.status(500).json({ error: 'Failed to fetch conversation' });
+  }
+});
+
+router.post('/history/refresh', async (req, res) => {
+  try {
+    const watcher = getWatcher();
+    if (!watcher) {
+      return res.status(503).json({ error: 'Ingestor not running' });
+    }
+    await watcher.rescanAll();
+    res.json({ success: true, stats: watcher.getStats() });
+  } catch (error) {
+    logger.error('history', 'Failed to refresh', { error: error.message });
+    res.status(500).json({ error: 'Failed to refresh history' });
   }
 });
 

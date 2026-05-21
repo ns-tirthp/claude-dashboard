@@ -431,5 +431,14 @@ export function transformJSONLFile(filePath, events, projectDir, projectPathHint
     || getProjectName(projectDir);
 
   const transformer = new EventTransformer(sessionId, projectPath, projectDir);
-  return transformer.transform(events);
+  const result = transformer.transform(events);
+
+  // Skip sessions that contain no real conversation — files with only metadata
+  // events (permission-mode, last-prompt) are created when the user opens and
+  // immediately exits the CLI without sending a prompt.
+  if (!result.messages || result.messages.length === 0) {
+    return null;
+  }
+
+  return result;
 }

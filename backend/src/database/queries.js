@@ -680,7 +680,10 @@ export function getAllSessions(options = {}) {
     params.push(project);
   }
 
-  sql += ' GROUP BY c.id ORDER BY c.started_at DESC LIMIT ? OFFSET ?';
+  // HAVING filters out empty sessions — files created when the user opens the
+  // CLI and exits without sending a prompt contain only metadata events
+  // (permission-mode, last-prompt) and produce zero messages.
+  sql += ' GROUP BY c.id HAVING message_count > 0 ORDER BY c.started_at DESC LIMIT ? OFFSET ?';
   params.push(limit, offset);
 
   return db.prepare(sql).all(...params);
