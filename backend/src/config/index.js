@@ -20,6 +20,9 @@ const config = Object.freeze({
   dashboardDbPath: process.env.DASHBOARD_DB_PATH ||
     path.join(backendRoot, 'data', 'dashboard.db'),
 
+  analyticsDbPath: process.env.ANALYTICS_DB_PATH ||
+    path.join(backendRoot, 'data', 'analytics.db'),
+
   ai: {
     provider: process.env.AI_PROVIDER || 'claude',
     model: process.env.AI_MODEL || null,

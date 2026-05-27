@@ -4,11 +4,13 @@ import telemetryRouter from './domains/telemetry/telemetry.routes.js';
 import chatRouter from './domains/chat/chat.routes.js';
 import historyRouter from './domains/history/history.routes.js';
 import otlpRouter from './domains/otlp/otlp.routes.js';
+import analyticsRouter from './domains/analytics/analytics.routes.js';
 
 const api = Router();
 
 api.use(statsRouter);
 api.use('/telemetry', telemetryRouter);
+api.use('/analytics', analyticsRouter);
 api.use(chatRouter);
 api.use(historyRouter);
 
